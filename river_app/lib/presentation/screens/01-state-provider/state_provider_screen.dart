@@ -22,6 +22,7 @@ class StateProviderScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: '3',
         child: const Icon(Icons.refresh_rounded),
         onPressed: () {
           //No tiene sentido usar watch porque estoy dentro de una función.

@@ -5,4 +5,15 @@ class RandomGenerator {
     final randomNames = RandomNames(Zone.spain);
     return randomNames.fullName();
   }
+
+  //Metodo para generer nombres aleatorios.
+  static Stream<String> randomNamesStream() {
+    return Stream.periodic(
+      const Duration(seconds: 2),
+      (computationCount) {
+        print('Stream new value');
+        return getRandomName();
+      },
+    );
+  }
 }
