@@ -1,6 +1,73 @@
 //state notifier provider
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+// State Notifier Provider
+final permissionsProvider =
+    StateNotifierProvider<PermissionsNotifier, PermissionsState>((ref) {
+  return PermissionsNotifier();
+});
+
+class PermissionsNotifier extends StateNotifier<PermissionsState> {
+  PermissionsNotifier() : super(PermissionsState());
+
+  Future<void> checkPermissions() async {
+    final permissionsArray = await Future.wait([
+      Permission.camera.status,
+      Permission.photos.status,
+      Permission.sensors.status,
+      Permission.location.status,
+      Permission.locationAlways.status,
+      Permission.locationWhenInUse.status,
+    ]);
+
+    state = state.copyWith(
+      camera: permissionsArray[0],
+      photoLibrary: permissionsArray[1],
+      sensors: permissionsArray[2],
+      location: permissionsArray[3],
+      locationAlways: permissionsArray[4],
+      locationWheInUse: permissionsArray[5],
+    );
+  }
+
+  requestCameraAccess() async {
+    final status = await Permission.camera.request();
+    state = state.copyWith(camera: status);
+
+    if (status == PermissionStatus.permanentlyDenied) {
+      openAppSettings();
+    }
+  }
+
+  requestFotosAccess() async {
+    final status = await Permission.photos.request();
+    state = state.copyWith(photoLibrary: status);
+
+    if (status == PermissionStatus.permanentlyDenied) {
+      openAppSettings();
+    }
+  }
+
+  requestLocationAccess() async {
+    final status = await Permission.location.request();
+    state = state.copyWith(location: status);
+
+    if (status == PermissionStatus.permanentlyDenied) {
+      openAppSettings();
+    }
+  }
+
+  requestSensorsAccess() async {
+    final status = await Permission.sensors.request();
+    state = state.copyWith(sensors: status);
+
+    if (status == PermissionStatus.permanentlyDenied) {
+      openAppSettings();
+    }
+  }
+}
 
 class PermissionsState {
   final PermissionStatus camera;

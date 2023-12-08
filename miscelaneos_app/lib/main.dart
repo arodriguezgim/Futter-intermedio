@@ -21,6 +21,7 @@ class MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
     super.initState();
     //Creamos el observador
     WidgetsBinding.instance.addObserver(this);
+    ref.read(permissionsProvider.notifier).checkPermissions();
   }
 
   @override
@@ -41,6 +42,9 @@ class MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
     // El estado me dirá como se encuentra l a aplicacion
     print('Estado: $state');
     ref.read(appStateProvider.notifier).state = state;
+    if (state == AppLifecycleState.resumed) {
+      ref.read(permissionsProvider.notifier).checkPermissions();
+    }
     super.didChangeAppLifecycleState(state);
   }
 
