@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MenuItem {
   final String title;
@@ -18,7 +19,7 @@ final menuItems = <MenuItem>[
   MenuItem('Magnetometro', Icons.explore_outlined, '/magnetometer'),
   MenuItem(
       'Giroscopio Ball', Icons.sports_baseball_outlined, '/gyroscope-ball'),
-  MenuItem('Mapa', Icons.explore, '/map'),
+  MenuItem('Compass', Icons.explore, '/compass'),
 ];
 
 class MainMenu extends StatelessWidget {
@@ -56,8 +57,36 @@ class HomeMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: bgcolors[0],
+    return GestureDetector(
+      onTap: () => context.push(route),
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+              colors: bgcolors,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            )),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(
+            icon,
+            color: Colors.white,
+            size: 40,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ]),
+      ),
     );
   }
 }
