@@ -20,6 +20,11 @@ final menuItems = <MenuItem>[
   MenuItem(
       'Giroscopio Ball', Icons.sports_baseball_outlined, '/gyroscope-ball'),
   MenuItem('Compass', Icons.explore, '/compass'),
+
+  //Ubicacion
+  MenuItem('Ubicación', Icons.pin_drop, '/location'),
+  MenuItem('Mapa', Icons.map_outlined, '/maps'),
+  MenuItem('Mapa Controlado', Icons.gamepad_outlined, '/controlled-map'),
 ];
 
 class MainMenu extends StatelessWidget {
@@ -60,7 +65,7 @@ class HomeMenuItem extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.push(route),
       child: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(

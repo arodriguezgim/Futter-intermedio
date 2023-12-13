@@ -29,5 +29,18 @@ final router = GoRouter(routes: [
   GoRoute(
     path: '/compass',
     builder: (context, state) => const CompassScreen(),
+  ),
+  //Ubicacion y Mapas
+  GoRoute(
+    path: '/maps',
+    builder: (context, state) => const MapScreen(),
+  ),
+  GoRoute(
+    path: '/location',
+    builder: (context, state) => const LocationScreen(),
+  ),
+  GoRoute(
+    path: '/controlled-map',
+    builder: (context, state) => const ControlledMapScreen(),
   )
 ]);
