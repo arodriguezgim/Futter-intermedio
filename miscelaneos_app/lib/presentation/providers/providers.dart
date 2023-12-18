@@ -7,3 +7,5 @@ export 'sensors/accelerometer_provider.dart';
 export 'location/user_location_provider.dart';
 // Ubicacion continua
 export 'location/watch_location_provider.dart';
+
+export 'location/map_controller_provider.dart';
