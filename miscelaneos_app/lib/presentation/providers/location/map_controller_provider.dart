@@ -17,6 +17,10 @@ class MapState {
     this.controller,
   });
 
+  Set<Marker> get markersSet {
+    return Set.from(markers);
+  }
+
   // Generar copyWith
   MapState copyWith({
     bool? isReady,
@@ -35,7 +39,12 @@ class MapState {
 
 class MapNotifier extends StateNotifier<MapState> {
   StreamSubscription? userLocation$;
-  MapNotifier() : super(MapState());
+  (double, double)? lastKnownLocation;
+  MapNotifier() : super(MapState()) {
+    trackUser().listen((event) {
+      lastKnownLocation = (event.$1, event.$2);
+    });
+  }
 
   Stream<(double, double)> trackUser() async* {
     await for (final position in Geolocator.getPositionStream()) {
@@ -61,6 +70,7 @@ class MapNotifier extends StateNotifier<MapState> {
     state = state.copyWith(followUser: !state.followUser);
 
     if (state.followUser) {
+      findUser();
       userLocation$ = trackUser().listen((position) {
         goToLocation(position.$1, position.$2);
       });
@@ -68,9 +78,41 @@ class MapNotifier extends StateNotifier<MapState> {
       userLocation$?.cancel();
     }
   }
+
+  findUser() {
+    if (lastKnownLocation == null) return;
+    final (lat, lng) = lastKnownLocation!;
+
+    goToLocation(lat, lng);
+/*
+    trackUser().take(1).listen((event) {
+      goToLocation(event.$1, event.$2);
+    });
+    */
+  }
+
+  void addMarkerCurrentPosition() {
+    if (lastKnownLocation == null) return;
+    final (lat, lng) = lastKnownLocation!;
+
+    addMarker(lat, lng, name: 'Mi ubicación');
+  }
+
+  void addMarker(double lat, double lng, {String name = 'No name'}) {
+    final newMarker = Marker(
+        markerId: MarkerId('${state.markers.length}'),
+        position: LatLng(lat, lng),
+        infoWindow: InfoWindow(
+          title: name,
+          snippet: 'Por aqui pasó el usuario',
+          //onTap: () => print('tap en el marker'),
+        ));
+
+    state = state.copyWith(markers: [...state.markers, newMarker]);
+  }
 }
 
 final mapControllerProvider =
-    StateNotifierProvider<MapNotifier, MapState>((ref) {
+    StateNotifierProvider.autoDispose<MapNotifier, MapState>((ref) {
   return MapNotifier();
 });
